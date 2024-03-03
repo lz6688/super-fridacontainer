@@ -1,0 +1,42 @@
+{
+  "name": "super-fridacontainer",
+  "version": "1.0.0",
+  "description": "fridaContainer written in TypeScript and JavaScript",
+  "private": false,
+  "main": "index.ts",
+  "scripts": {
+    "build": "frida-compile index.ts -o _fcagent.js",
+    "watch": "frida-compile index.ts -o _fcagent.js -w"
+  },
+  "devDependencies": {
+    "@types/frida-gum": "^16.2.0",
+    "@types/node": "^14.14.2",
+    "frida-compile": "^10.2.5 "
+  },
+  "dependencies": {
+    "@types/frida-gum": "^16.2.0",
+    "@types/node": "^14.14.2",
+    "frida-compile": "^10.2.5 ",
+    "user": "^0.0.0"
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "examples"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lz6688/super-fridacontainer.git"
+  },
+  "author": "hacker",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lz6688/super-fridacontainer/issues"
+  },
+  "homepage": "https://github.com/lz6688/super-fridacontainer#readme",
+  "files": [
+    "dist/**/*"
+  ],
+  "keywords": [
+    "frida"
+  ]
+}
