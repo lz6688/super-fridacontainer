@@ -4,7 +4,7 @@ import os
 @author: HacKer
 @contact: 44071710@qq.com
 @file: pass.py
-@time: 2020/11/9 7:43 下午
+@time: 2024/3/3 7:43 下午
 @desc: 运行 IDA server 脚本
 '''
 

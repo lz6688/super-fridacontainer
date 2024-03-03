@@ -2,7 +2,7 @@
  * @author: HacKer
  * @contact: 44071710@qq.com
  * @file: ios_hook_func.js
- * @time: 2020/9/16 12:37 PM
+ * @time: 2024/3/3 12:37 PM
  * @desc:
  */
 
@@ -10,7 +10,7 @@ import {FCiOS} from "../utils/FCiOS";
 import {DMLog} from "../utils/dmlog";
 
 if (ObjC.available) {
-    const addr = FCiOS.getFuncAddr('*[NVEnvironment deviceId]');
+    var addr = FCiOS.getFuncAddr('*[NVEnvironment deviceId]');
     Interceptor.attach(addr, {
         onEnter: function (args) {
 

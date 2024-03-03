@@ -12,7 +12,7 @@ export namespace Call_method {
     */
     export function set_method(cls:string,m:string,args:any[],is_static:boolean=false){
         if(is_static){
-            const Class=Java.use(cls);
+            var Class=Java.use(cls);
             Class[m].apply(null,args);
         }else{
             Java.choose(cls,{    //要hook的类

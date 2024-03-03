@@ -194,8 +194,8 @@ function dump_dex() {
         Interceptor.attach(addr_DefineClass, {
             onEnter: function(args) {
                 var dex_file = args[5];
-                //ptr(dex_file).add(Process.pointerSize) is "const uint8_t* const begin_;"
-                //ptr(dex_file).add(Process.pointerSize + Process.pointerSize) is "const size_t size_;"
+                //ptr(dex_file).add(Process.pointerSize) is "var uint8_t* var begin_;"
+                //ptr(dex_file).add(Process.pointerSize + Process.pointerSize) is "var size_t size_;"
                 var base = ptr(dex_file).add(Process.pointerSize).readPointer();
                 var size = ptr(dex_file).add(Process.pointerSize + Process.pointerSize).readUInt();
 

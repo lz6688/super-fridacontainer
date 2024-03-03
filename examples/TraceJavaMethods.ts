@@ -2,7 +2,7 @@
  * @author: HacKer
  * @contact: 44071710@qq.com
  * @file: TraceJavaMethods.js
- * @time: 2020/12/10 11:00 上午
+ * @time: 2024/3/3 11:00 上午
  * @desc: trace java methods example
  *          建议从 python/android/traceLogCleaner.py 启动，
  *          默认 attach 当前打开的应用，并将日志格式化输出到当前目录的 tdc_dir 文件夹中

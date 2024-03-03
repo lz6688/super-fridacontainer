@@ -2,7 +2,7 @@
  * @author: HacKer
  * @contact: 44071710@qq.com
  * @file: FCiOS.js
- * @time: 2020/9/16 12:39 PM
+ * @time: 2024/3/3 12:39 PM
  * @desc:
  */
 import {DMLog} from "./dmlog";
@@ -84,7 +84,7 @@ export namespace FCiOS {
     }
 
     export function trace_NSLog() {
-        const NSLog_ptr = Module.findExportByName("Foundation", "NSLog");
+        var NSLog_ptr = Module.findExportByName("Foundation", "NSLog");
         DMLog.i('NSLog_ptr', 'addr: ' + NSLog_ptr);
         if (NSLog_ptr) {
             Interceptor.attach(NSLog_ptr, {
@@ -94,7 +94,7 @@ export namespace FCiOS {
             });
         }
 
-        const NSLogv_ptr = Module.findExportByName("Foundation", "NSLogv");
+        var NSLogv_ptr = Module.findExportByName("Foundation", "NSLogv");
         DMLog.i('NSLogv_ptr', 'addr: ' + NSLogv_ptr);
         if (NSLogv_ptr) {
             Interceptor.attach(NSLogv_ptr, {

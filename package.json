@@ -11,13 +11,14 @@
   "devDependencies": {
     "@types/frida-gum": "^16.2.0",
     "@types/node": "^14.14.2",
-    "frida-compile": "^10.2.5 "
+    "frida-compile": "^10.2.5",
+    "colors.ts":"^1.0.0"
   },
   "dependencies": {
     "@types/frida-gum": "^16.2.0",
     "@types/node": "^14.14.2",
     "frida-compile": "^10.2.5 ",
-    "user": "^0.0.0"
+    "colors.ts":"^1.0.0"
   },
   "directories": {
     "doc": "docs",

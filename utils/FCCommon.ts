@@ -4,7 +4,7 @@ import {DMLog} from "./dmlog";
  * @author: HacKer
  * @contact: 44071710@qq.com
  * @file: FCCommon.js
- * @time: 2020/10/13 3:23 PM
+ * @time: 2024/3/3 3:23 PM
  * @desc: 跨平台可通用的方法
  */
 
@@ -68,16 +68,16 @@ export namespace FCCommon {
      *                              否则可能会遇到权限问题，导致保存失败。
      */
     export function dump_module(moduleName: string, saveDir: string) {
-        const tag = 'dump_module';
-        const module = Process.getModuleByName(moduleName);
-        const base = module.base;
-        const size = module.size;
-        const savePath: string = saveDir + "/" + moduleName + "_" + base + "_" + size + ".fcdump";
+        var tag = 'dump_module';
+        var module = Process.getModuleByName(moduleName);
+        var base = module.base;
+        var size = module.size;
+        var savePath: string = saveDir + "/" + moduleName + "_" + base + "_" + size + ".fcdump";
         DMLog.i(tag, "base: " + base + ", size: " + size);
         DMLog.i(tag, "save path: " + savePath);
-        let readed = base.readByteArray(size);
+        var readed = base.readByteArray(size);
         try {
-            const f = new File(savePath, "wb");
+            var f = new File(savePath, "wb");
             if (f) {
                 Memory.protect(base, size, "rwx");
                 if (readed) {
@@ -87,27 +87,27 @@ export namespace FCCommon {
                 f.close();
             }
         } catch (e) {
-            const fopen_ptr = Module.getExportByName(null, 'fopen');
-            const fwrite_ptr = Module.getExportByName(null, 'fwrite');
-            const fclose_ptr = Module.getExportByName(null, 'fclose');
+            var fopen_ptr = Module.getExportByName(null, 'fopen');
+            var fwrite_ptr = Module.getExportByName(null, 'fwrite');
+            var fclose_ptr = Module.getExportByName(null, 'fclose');
             if (fopen_ptr && fwrite_ptr && fclose_ptr) {
-                const fopen_func = new NativeFunction(fopen_ptr, 'pointer', ['pointer', 'pointer']);
-                const fwrite_func = new NativeFunction(fwrite_ptr, 'int', ['pointer', 'int', 'int', 'pointer']);
-                const fclose_func = new NativeFunction(fclose_ptr, 'int', ['pointer']);
+                var fopen_func = new NativeFunction(fopen_ptr, 'pointer', ['pointer', 'pointer']);
+                var fwrite_func = new NativeFunction(fwrite_ptr, 'int', ['pointer', 'int', 'int', 'pointer']);
+                var fclose_func = new NativeFunction(fclose_ptr, 'int', ['pointer']);
 
-                let savePath_ptr = Memory.alloc(savePath.length + 1);
+                var savePath_ptr = Memory.alloc(savePath.length + 1);
                 savePath_ptr.writeUtf8String(savePath);
-                const f = fopen_func(savePath_ptr, Memory.alloc(3).writeUtf8String("wb"));
-                DMLog.i(tag, 'fopen: ' + f);
+                var f1 = fopen_func(savePath_ptr, Memory.alloc(3).writeUtf8String("wb"));
+                DMLog.i(tag, 'fopen: ' + f1);
                 // if (f != 0 && readed) {
                 if (readed) {
-                    const readed_ptr = Memory.alloc(readed.byteLength);
+                    var readed_ptr = Memory.alloc(readed.byteLength);
                     readed_ptr.writeByteArray(readed);
-                    fwrite_func(readed_ptr, readed.byteLength, 1, f);
-                    fclose_func(f);
+                    fwrite_func(readed_ptr, readed.byteLength, 1, f1);
+                    fclose_func(f1);
                 }
                 else {
-                    DMLog.e(tag, 'failed: f->' + f + ', readed->' + readed);
+                    DMLog.e(tag, 'failed: f1->' + f1 + ', readed->' + readed);
                 }
             }
         }

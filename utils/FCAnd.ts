@@ -3,11 +3,11 @@
  * @contact: 44071710@qq.com
  * @file: AntiDexLoader.js
  * @time: 2024/2/28 5:03 PM
- * @desc:
+ * @desc:Android 相关的hook_api
  */
 
 
-const fridaUnpack = require('./android/unpack/fridaUnpack');
+var fridaUnpack = require('./android/unpack/fridaUnpack');
 import {Anti} from "./android/Anti";
 import {Call_method} from "./android/call/Call_method";
 import {Jni} from "./android/jnimgr";
@@ -17,10 +17,10 @@ import internal from "stream";
 import exp from "constants";
 
 export namespace FCAnd {
-    export const anti = Anti;
-    export const jni = Jni;
-    export const common = FCCommon;
-    export const call = Call_method;
+    export var anti = Anti;
+    export var jni = Jni;
+    export var common = FCCommon;
+    export var call = Call_method;
 
     /*
         获取调用栈
@@ -44,7 +44,7 @@ export namespace FCAnd {
         获取JSONObject的key值
     */
     export function get_JSONObject_getString(pKey: string) {
-        const JSONObject = Java.use('org.json.JSONObject');
+        var JSONObject = Java.use('org.json.JSONObject');
         JSONObject.getString.implementation = function (key: string) {
             if (key == pKey) {
                 DMLog.i('get_JSONObject_getString', 'found key: ' + key);
@@ -59,7 +59,7 @@ export namespace FCAnd {
     */
     export function get_fastJson(pKey: string) {
         // coord: (106734,0,22) | addr: Lcom/alibaba/fastjson/JSONObject; | loc: ?
-        const fastJson = Java.use('com/alibaba/fastjson/JSONObject');
+        var fastJson = Java.use('com/alibaba/fastjson/JSONObject');
         fastJson.getString.implementation = function (key: string) {
             if (key == pKey) {
                 DMLog.i('get_fastJson getString', 'found key: ' + key);
@@ -94,7 +94,7 @@ export namespace FCAnd {
         获取Map的key和val值
     */
     export function get_Map(pKey: string, accurately: boolean) {
-        const Map = Java.use('java.util.Map');
+        var Map = Java.use('java.util.Map');
         Map.put.implementation = function (key: string, val: string) {
             var bRes = false;
             if (accurately) {
@@ -111,7 +111,7 @@ export namespace FCAnd {
             this.put(key, val);
         };
 
-        const LinkedHashMap = Java.use('java.util.LinkedHashMap');
+        var LinkedHashMap = Java.use('java.util.LinkedHashMap');
         LinkedHashMap.put.implementation = function (key1: any, val: any) {
             var bRes = false;
             if (accurately) {
@@ -133,7 +133,7 @@ export namespace FCAnd {
         获取android日志输出
     */
     export function get_log() {
-        const Log = Java.use('android.util.Log');
+        var Log = Java.use('android.util.Log');
         Log.d.overload('java.lang.String', 'java.lang.String')
             .implementation = function (tag: string, content: string) {
             DMLog.i('Log d', 'tag: ' + tag + ', content: ' + content);
@@ -164,13 +164,13 @@ export namespace FCAnd {
         获取消息框的信息
     */
     export function get_makeText(bShowStacks: boolean=false){
-        const TextView= Java.use("android.widget.Toast");
+        var TextView= Java.use("android.widget.Toast");
         TextView.makeText.overload('android.content.Context', 'java.lang.CharSequence', 'int').implementation = function (context:any,text:String,duration:internal) {
             DMLog.i('get_makeText', 'Context: ' + context + ' text: ' + text + ' duration: ' + duration);
             if (bShowStacks) {
                 showStacks();
             }
-            const result = this["makeText"](context,text,duration);
+            var result = this["makeText"](context,text,duration);
             return result;
         };
     }
@@ -179,9 +179,9 @@ export namespace FCAnd {
         获取hook的随机数
     */
     export function get_random(bShowStacks: boolean=false){
-        const Math = Java.use("java.lang.Math");
+        var Math = Java.use("java.lang.Math");
         Math.random.implementation = function(){
-            const result = this.random();
+            var result = this.random();
             DMLog.i('get_random', 'random is value:' + result);
             if (bShowStacks) {
                 showStacks();
@@ -194,7 +194,7 @@ export namespace FCAnd {
         设置hook的随机数
     */
     export function set_random(value:any){
-        const Math = Java.use("java.lang.Math");
+        var Math = Java.use("java.lang.Math");
         Math.random.implementation = function(){
             DMLog.i('set_random', 'set random value:' + Number(value));
             // Number 将value的值转换为双精度浮点数
@@ -206,9 +206,9 @@ export namespace FCAnd {
         获取应用程序的签名
     */
     export function get_signatures(bShowStacks: boolean=false){
-        const Signature = Java.use("android.content.pm.Signature");
+        var Signature = Java.use("android.content.pm.Signature");
         Signature.toByteArray.implementation = function(){
-            const result = this.toByteArray(); 
+            var result = this.toByteArray(); 
             DMLog.i('get_signatures', 'signatures is bytearray:{' + result + '}');
             if (bShowStacks) {
                 showStacks();
@@ -221,13 +221,13 @@ export namespace FCAnd {
         获取字节缓冲区的容量
     */
     export function get_ByteBuffer_allocate(bShowStacks: boolean=false){
-        const ByteBuffer = Java.use("java.nio.ByteBuffer");
+        var ByteBuffer = Java.use("java.nio.ByteBuffer");
         ByteBuffer.allocate.implementation = function(capacity:any){
             DMLog.i('get_ByteBuffer_allocate', 'allocate is capacity:' + capacity + '');
             if (bShowStacks) {
                 showStacks();
             }
-            const result = this.allocate(capacity); 
+            var result = this.allocate(capacity); 
             return result;
         }
     }
@@ -238,7 +238,7 @@ export namespace FCAnd {
     export function get_HeapByteBuffer_array(){
         Java.choose("java.nio.HeapByteBuffer",{
             onMatch:function(ins){
-                const result = ins.array();
+                var result = ins.array();
                 DMLog.i('get_HeapByteBuffer_array', ' result:' + result + '');
             },
             onComplete:function(){}
@@ -250,13 +250,13 @@ export namespace FCAnd {
     */
     export function get_HeapByteBuffer_put(bShowStacks: boolean=false){
         // ByteBuffer 的实现类
-        const HeapByteBuffer = Java.use("java.nio.HeapByteBuffer");
+        var HeapByteBuffer = Java.use("java.nio.HeapByteBuffer");
         HeapByteBuffer.put.overload('byte').implementation = function(b:any){
             DMLog.i('get_HeapByteBuffer_put', ' byte:' + b + '');
             if (bShowStacks) {
                 showStacks();
             }
-            const result = this.put(b); 
+            var result = this.put(b); 
             return result;
         }   
         HeapByteBuffer.put.overload('int', 'byte').implementation = function(int:any,b:any){
@@ -264,7 +264,7 @@ export namespace FCAnd {
             if (bShowStacks) {
                 showStacks();
             }
-            const result = this.put(int,b); 
+            var result = this.put(int,b); 
             return result;
         }
         HeapByteBuffer.put.overload('[B', 'int', 'int').implementation = function(b:any,int1:any,int2:any){
@@ -272,7 +272,7 @@ export namespace FCAnd {
             if (bShowStacks) {
                 showStacks();
             }
-            const result = this.put(b,int1,int2); 
+            var result = this.put(b,int1,int2); 
             return result;
         }
         
@@ -286,7 +286,7 @@ export namespace FCAnd {
     */
     export function get_value(cls:string,name:string,is_static:boolean=false){
         if(is_static){
-            const Class = Java.use(cls);
+            var Class = Java.use(cls);
             DMLog.i("get_value",name + " is static value:  " + Class[name].value);
             DMLog.i("get_value",name + " is same static value:" + Class["_" + name].value);
         }else{
@@ -311,7 +311,7 @@ export namespace FCAnd {
     */
     export function set_value(cls:string,name:string,value:any,is_static:boolean=false){
         if(is_static){
-            const Class = Java.use(cls);
+            var Class = Java.use(cls);
             Class[name].value = value;
             Class["_" + name].value = value;
             DMLog.i("set_value",name + " set static value:  " + Class[name].value);
@@ -366,7 +366,7 @@ export namespace FCAnd {
 
     */
     export function find_method(cls:string,m:string){
-        const Class = Java.use(cls);
+        var Class = Java.use(cls);
         Java.choose(cls, {
             onMatch: function (instance) {
                 DMLog.i("find_method","claessName : " + instance[m].$className);
@@ -396,7 +396,7 @@ export namespace FCAnd {
     */
     export function traceLoadlibrary() {
         // 低版本
-        const dlopen_ptr = Module.findExportByName(null, 'dlopen');
+        var dlopen_ptr = Module.findExportByName(null, 'dlopen');
         if (null != dlopen_ptr) {
             DMLog.i('traceLoadlibrary', 'dlopen_ptr: ' + dlopen_ptr);
             Interceptor.attach(dlopen_ptr, {
@@ -410,7 +410,7 @@ export namespace FCAnd {
         }
 
         // 高版本
-        const android_dlopen_ext = Module.findExportByName(null,"android_dlopen_ext");
+        var android_dlopen_ext = Module.findExportByName(null,"android_dlopen_ext");
         if (null != dlopen_ptr) {
             DMLog.i('traceLoadlibrary', 'android_dlopen_ext: ' + android_dlopen_ext);
             Interceptor.attach(dlopen_ptr, {
@@ -428,7 +428,7 @@ export namespace FCAnd {
         显示模块
     */
     export function showModules() {
-        const modules = Process.enumerateModules();
+        var modules = Process.enumerateModules();
         modules.forEach(function (value, index, array) {
             /*
                 以json对象形式
@@ -441,7 +441,7 @@ export namespace FCAnd {
         跟踪fopen
     */
     export function traceFopen() {
-        const open_ptr = Module.findExportByName(null, 'fopen');
+        var open_ptr = Module.findExportByName(null, 'fopen');
         if (null != open_ptr) {
             DMLog.i('traceFopen', 'fopen_ptr: ' + open_ptr);
             Interceptor.attach(open_ptr, {
@@ -474,7 +474,7 @@ export namespace FCAnd {
         if (null == res) {
             return null;
         }
-        const String = Java.use('java.lang.String');
+        var String = Java.use('java.lang.String');
         return String.$new(res);
     }
 
@@ -482,9 +482,9 @@ export namespace FCAnd {
         获取上下文信息(常用)
     */
     export function getApplicationContext() {
-        const ActivityThread = Java.use('android.app.ActivityThread');
-        const Context = Java.use('android.content.Context');
-        const ctx = Java.cast(ActivityThread.currentApplication().getApplicationContext(), Context);
+        var ActivityThread = Java.use('android.app.ActivityThread');
+        var Context = Java.use('android.content.Context');
+        var ctx = Java.cast(ActivityThread.currentApplication().getApplicationContext(), Context);
         return ctx;
     }
 
@@ -504,7 +504,7 @@ export namespace FCAnd {
     /**
      * trace java methods 默认类
      */
-    export const tjm_default_cls = [
+    export var tjm_default_cls = [
         // 'E:javax.crypto.Cipher',
         // 'E:javax.crypto.spec.SecretKeySpec',
         // 'E:javax.crypto.spec.IvParameterSpec',
@@ -519,7 +519,7 @@ export namespace FCAnd {
     /**
      * trace java methods 对 java.lang.String 类中的默认白名单方法名
      */
-    export const tjm_default_white_detail: any = {
+    export var tjm_default_white_detail: any = {
         /*{ clsname: {white: true/false, methods[a, b, c]} }*/
         'java.lang.String': {white: true, methods: ['toString', 'getBytes']}
     }
@@ -542,8 +542,8 @@ export namespace FCAnd {
      * @stackFilter 按匹配字串打印堆栈。如果要匹配 bytes 数组需要十进制无空格字串，例如："104,113,-105"
      */
     export function traceJavaMethods(clazzes?: null | string[], clsWhitelist?: null | any, stackFilter?: string) {
-        let dest_cls: string[] = [];
-        let dest_white: any = {...tjm_default_white_detail, ...clsWhitelist};
+        var dest_cls: string[] = [];
+        var dest_white: any = {...tjm_default_white_detail, ...clsWhitelist};
         if (clazzes != null) {
             dest_cls = tjm_default_cls.concat(clazzes);
         }
@@ -557,8 +557,8 @@ export namespace FCAnd {
     export function traceJavaMethods_custom(clazzes: string[], clsWhitelist?: null | any, stackFilter?: string) {
 
         function match(destCls: string, curClsName: string) {
-            let mode = destCls[0];
-            let ex = destCls.substr(2);
+            var mode = destCls[0];
+            var ex = destCls.substr(2);
             if (mode == 'E') {
                 return ex == curClsName;
             }
@@ -568,8 +568,8 @@ export namespace FCAnd {
         }
 
         function sendContent(obj: any) {
-            let str = JSON.stringify(obj);
-            let stacks = null;
+            var str = JSON.stringify(obj);
+            var stacks = null;
             if (null != stackFilter && str.indexOf(stackFilter) > -1) {
                 stacks = getStacks();
                 obj['stacks'] = stacks;
@@ -579,13 +579,13 @@ export namespace FCAnd {
         }
 
         function traceJavaMethodsCore(clsname: string) {
-            let cls = Java.use(clsname);
-            let methods = cls.class.getDeclaredMethods();
+            var cls = Java.use(clsname);
+            var methods = cls.class.getDeclaredMethods();
             DMLog.i('traceJavaMethodsCore', 'trace cls: ' + clsname + ', method size: ' + methods.length);
             methods.forEach(function (method: any) {
-                let methodName = method.getName();
+                var methodName = method.getName();
                 DMLog.i('traceJavaMethodsCore.methodname', methodName);
-                let detail = null;
+                var detail = null;
                 if (null != clsWhitelist) {
                     detail = clsWhitelist[clsname];
                 }
@@ -598,13 +598,13 @@ export namespace FCAnd {
                 if ('invoke' == methodName || 'getChars' == methodName) {
                     return true;    // 跳过并继续执行下一个 forEach
                 }
-                let methodOverloads = cls[methodName].overloads;
+                var methodOverloads = cls[methodName].overloads;
                 if (null != methodOverloads) {
                     methodOverloads.forEach(function (overload: any) {
                         try {
                             overload.implementation = function () {
-                                let tid = Process.getCurrentThreadId();
-                                let tname = Java.use("java.lang.Thread").currentThread().getName();
+                                var tid = Process.getCurrentThreadId();
+                                var tname = Java.use("java.lang.Thread").currentThread().getName();
                                 sendContent({
                                     tid: tid,
                                     status: 'entry',
@@ -614,7 +614,7 @@ export namespace FCAnd {
                                     method_: overload._p[0],
                                     args: arguments
                                 });
-                                const retval = this[methodName].apply(this, arguments);
+                                var retval = this[methodName].apply(this, arguments);
                                 sendContent({
                                     tid: tid,
                                     status: 'exit',
@@ -632,12 +632,12 @@ export namespace FCAnd {
                 }
             })
 
-            // let consOverloads = cls.$init.overloads;
+            // var consOverloads = cls.$init.overloads;
             // if (null != consOverloads) {
             //     consOverloads.forEach(function (overload: any) {
             //         overload.implementation = function () {
             //             DMLog.i('traceInit_entry',  '================');
-            //             let retval = this.$init(arguments);
+            //             var retval = this.$init(arguments);
             //             DMLog.i('traceInit_exit', '-----------------');
             //             return retval;
             //         }

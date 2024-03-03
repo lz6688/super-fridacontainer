@@ -1,8 +1,8 @@
 /**
- * @author: xingjun.xyf
- * @contact: deathmemory@163.com
+ * @author: HacKer
+ * @contact: 44071710@qq.com
  * @file: repinning_test.js
- * @time: 2020/4/11 9:55 PM
+ * @time: 2024/3/3 12:39 PM
  * @desc:
  */
 
@@ -84,7 +84,7 @@ setTimeout(function () {
 
 	   	function hook_InMemoryDexClassLoader() {
             //  dalvik.system.InMemoryDexClassLoader
-            const InMemoryDexClassLoader = Java.use('dalvik.system.InMemoryDexClassLoader');
+            var InMemoryDexClassLoader = Java.use('dalvik.system.InMemoryDexClassLoader');
             InMemoryDexClassLoader.$init.overload('java.nio.ByteBuffer', 'java.lang.ClassLoader')
                 .implementation = function (buff, loader) {
                 console.log('FaceBook.TAG' + ' hook_InMemoryDexClassLoader', 'entry');
@@ -107,7 +107,7 @@ setTimeout(function () {
                     console.log('A03', 'Just returned');
                 };
                 Java.classFactory.loader = oldcl;
-                // const _7J = loader0.loadClass('com.facebook.ads.redexgen.X.7J');
+                // var _7J = loader0.loadClass('com.facebook.ads.redexgen.X.7J');
                 // console.log('FaceBook.TAG' + ' hook_InMemoryDexClassLoader', 'loader0: ' + loader0);
                 // console.log('FaceBook.TAG' + ' hook_InMemoryDexClassLoader', 'find cls');
 
@@ -117,7 +117,7 @@ setTimeout(function () {
         
         function hook_DexClassLoader() {
             // dalvik.system.DexClassLoader;
-            const DexClassLoader = Java.use('dalvik.system.DexClassLoader');
+            var DexClassLoader = Java.use('dalvik.system.DexClassLoader');
             DexClassLoader.$init.implementation = function (p1, p2, p3, p4) {
                 console.log('FaceBook.TAG' + ' hook_DexClassLoader', 'entry');
                 return this.$init(p1, p2, p3, p4);
@@ -125,7 +125,7 @@ setTimeout(function () {
         }
 
         function hook_https() {
-            const HttpsURLConnection = Java.use('javax.net.ssl.HttpsURLConnection');
+            var HttpsURLConnection = Java.use('javax.net.ssl.HttpsURLConnection');
             HttpsURLConnection.getServerCertificates.implementation = function () {
                 console.log('getServerCertificates', 'entry');
                 return this.getServerCertificates();
@@ -133,7 +133,7 @@ setTimeout(function () {
         }
 
         function hook_HttpURLConnection() {
-            const HttpURLConnection = Java.use('java.net.HttpURLConnection');
+            var HttpURLConnection = Java.use('java.net.HttpURLConnection');
             HttpURLConnection.setConnectTimeout.implementation = function (num) {
                 console.log('hook_HttpURLConnection', 'setConnectTimeout: ' + num);
                 this.setConnectTimeout(num);

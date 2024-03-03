@@ -2,7 +2,7 @@
  * @author: HacKer
  * @contact: 44071710@qq.com
  * @file: jnimgr.js
- * @time: 2020/6/18 5:14 PM
+ * @time: 2024/3/3 5:14 PM
  * @desc:
  */
 import {FCCommon} from "../FCCommon"
@@ -12,7 +12,7 @@ import {MethodData} from "./jni/method_data";
 import JNI_ENV_METHODS from "./jni/jni_env.json";
 // struct JNINativeInterface :
 // https://android.googlesource.com/platform/libnativehelper/+/master/include_jni/jni.h#129
-const jni_struct_array = [
+var jni_struct_array = [
     "reserved0",
     "reserved1",
     "reserved2",
@@ -259,14 +259,14 @@ export namespace Jni {
     export function getJNIAddr(name: string) {
         var env = Java.vm.getEnv();
         var env_ptr = env.handle.readPointer();
-        const addr = Jni.getJNIFunctionAdress(env_ptr, name);
+        var addr = Jni.getJNIFunctionAdress(env_ptr, name);
         // DMLog.d('Jni.getJNIAddr', 'addr: ' + addr);
         return addr;
     }
 
     export function hookJNI(name: string, callbacksOrProbe: InvocationListenerCallbacks | InstructionProbeCallback,
                    data?: NativePointerValue) {
-        const addr = Jni.getJNIAddr(name);
+        var addr = Jni.getJNIAddr(name);
         return Interceptor.attach(addr, callbacksOrProbe);
     }
 
@@ -276,7 +276,7 @@ export namespace Jni {
      * 这个函数是JNI动态注册必用的
      */
     export function hook_registNatives() {
-        const tag = 'fridaRegstNtv';
+        var tag = 'fridaRegstNtv';
         Jni.hookJNI("RegisterNatives", {
             onEnter: function (args) {
                 var env = Java.vm.getEnv();
@@ -289,19 +289,19 @@ export namespace Jni {
                 DMLog.i(tag, "==== methods: " + methods + " nMethods: " + methodcount + " ====");
                 /** 根据函数结构原型遍历动态注册信息
                  typedef struct {
-                    const char* name;
-                    const char* signature;
+                    var char* name;
+                    var char* signature;
                     void* fnPtr;
                  } JNINativeMethod;
-                 jint RegisterNatives(JNIEnv* env, jclass clazz, const JNINativeMethod* methods, jint nMethods)
+                 jint RegisterNatives(JNIEnv* env, jclass clazz, var JNINativeMethod* methods, jint nMethods)
                  */
                 for (var i = 0; i < methodcount; i++) {
                     var idx = i * p_size * 3;
                     var fnPtr = methods.add(idx + p_size * 2).readPointer();
-                    const module = Process.getModuleByAddress(fnPtr);
+                    var module = Process.getModuleByAddress(fnPtr);
                     if (module) {
-                        const modulename = module.name;
-                        const modulebase = module.base;
+                        var modulename = module.name;
+                        var modulebase = module.base;
                         var logstr = "name: " + methods.add(idx).readPointer().readCString()
                             + ", signature: " + methods.add(idx + p_size).readPointer().readCString()
                             + ", fnPtr: " + fnPtr
@@ -330,7 +330,7 @@ export namespace Jni {
                 Jni.hookJNI(func_name, {
                     onEnter(args) {
                         // 触发时将信息保存到对象中
-                        let md = new MethodData(this.context, func_name, JNI_ENV_METHODS[idx], args);
+                        var md = new MethodData(this.context, func_name, JNI_ENV_METHODS[idx], args);
                         this.md = md;
                     },
                     onLeave(retval) {

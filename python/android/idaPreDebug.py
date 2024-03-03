@@ -6,7 +6,7 @@ import time
 @author: HacKer
 @contact: 44071710@qq.com
 @file: pass.py
-@time: 2020/11/9 7:43 下午
+@time: 2024/3/3 7:43 下午
 @desc: 启动 app 挂起， 附加 IDA 后按回车键继续运行
 '''
 

@@ -86,3 +86,5 @@ $ npm run watch
 - [art methods tracer](https://github.com/hluwa/ZenTracer)
 - [JNI-Frida-Hook](https://github.com/Areizen/JNI-Frida-Hook)
 - [jnitrace](https://github.com/chame1eon/jnitrace)
+- [OkHttpLogger-Frida](https://github.com/siyujie/OkHttpLogger-Frida)
+- [okhttpfind.dex源码链接](https://github.com/siyujie/okhttp_find)

@@ -2,15 +2,15 @@
  * @author: HacKer
  * @contact: 44071710@qq.com
  * @file: AntiDexLoader.js
- * @time: 2020/4/16 5:03 PM
+ * @time: 2024/3/3 5:03 PM
  * @desc:
  */
 import {DMLog} from "../dmlog";
 import {FCCommon} from "../FCCommon";
 
-const anti_InMemoryDexClassLoader = require("./anti/AntiDexLoader");
-const sslPinningPass = require("./repinning");
-const unpinning = require("./multi_unpinning");
+var anti_InMemoryDexClassLoader = require("./anti/AntiDexLoader");
+var sslPinningPass = require("./repinning");
+var unpinning = require("./multi_unpinning");
 
 export namespace Anti {
 
@@ -19,7 +19,7 @@ export namespace Anti {
      * 在利用 InMemoryDexClassLoader 加载内存 Dex 找不到类的情况下适用。
      * 调用方式：
      * FCAnd.anti.anti_InMemoryDexClassLoader(function(){
-     *     const cls = Java.use('find/same/multi/dex/class');
+     *     var cls = Java.use('find/same/multi/dex/class');
      *     // ...
      * });
      * @param callbackfunc
@@ -37,7 +37,7 @@ export namespace Anti {
     }
 
     export function anti_exit() {
-        const exit_ptr = Module.findExportByName(null, 'exit');
+        var exit_ptr = Module.findExportByName(null, 'exit');
         if (null == exit_ptr) {
             return;
         }
@@ -52,7 +52,7 @@ export namespace Anti {
     }
 
     export function anti_kill() {
-        const kill_ptr = Module.findExportByName(null, 'kill');
+        var kill_ptr = Module.findExportByName(null, 'kill');
         if (null == kill_ptr) {
             return;
         }
@@ -75,8 +75,8 @@ export namespace Anti {
      * wchan->SyS_epoll_wait
      */
     // export function anti_fgets() {
-    //     const tag = 'anti_fgets';
-    //     const fgetsPtr = Module.findExportByName(null, 'fgets');
+    //     var tag = 'anti_fgets';
+    //     var fgetsPtr = Module.findExportByName(null, 'fgets');
     //     DMLog.i(tag, 'fgets addr: ' + fgetsPtr);
     //     if (null == fgetsPtr) {
     //         return;
@@ -88,7 +88,7 @@ export namespace Anti {
     //         }
     //         var logTag = null;
     //         // 进入时先记录现场
-    //         const lr = FCCommon.getLR(this.context);
+    //         var lr = FCCommon.getLR(this.context);
     //         // 读取原 buffer
     //         var retval = fgets(buffer, size, fp);
     //         var bufstr = (buffer as NativePointer).readCString();

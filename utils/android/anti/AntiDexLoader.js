@@ -2,7 +2,7 @@
  * @author: HacKer
  * @contact: 44071710@qq.com
  * @file: AntiDexLoader.js
- * @time: 2020/4/16 5:03 PM
+ * @time: 2024/3/3 5:03 PM
  * @desc:
  */
 
@@ -12,7 +12,7 @@
 */
 function anti_InMemoryDexClassLoader(callbackfunc) {
     //  dalvik.system.InMemoryDexClassLoader
-    const InMemoryDexClassLoader = Java.use('dalvik.system.InMemoryDexClassLoader');
+    var InMemoryDexClassLoader = Java.use('dalvik.system.InMemoryDexClassLoader');
     InMemoryDexClassLoader.$init.overload('java.nio.ByteBuffer', 'java.lang.ClassLoader')
         .implementation = function (buff, loader) {
         this.$init(buff, loader);

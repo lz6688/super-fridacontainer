@@ -1,6 +1,9 @@
+/*
+    日志输出格式化
+*/
+
 export class DMLog {
     private static bDebug: boolean = true;
-
     static d(tag: string, str: string) {
         if (this.bDebug) {
             DMLog.log_('DEBUG', tag, str);
@@ -20,7 +23,7 @@ export class DMLog {
     }
 
     static send(tag: string, content: string) {
-        let tid = Process.getCurrentThreadId();
+        var tid = Process.getCurrentThreadId();
         send(JSON.stringify({
             tid: tid,
             status: 'msg',

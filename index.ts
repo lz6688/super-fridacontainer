@@ -22,7 +22,9 @@ function main() {
     // FCAnd.dump_dex();
     // FCNet.get_url_all();
     // FCNet.get_socket_all();
-    FCNet.get_ip_and_port();
+    // FCNet.get_ip_and_port();
+    FCNet.okhttp3_find();
+    
 }
 
 /*
