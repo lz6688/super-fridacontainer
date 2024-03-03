@@ -1,7 +1,13 @@
+/**
+ * @author: HacKer
+ * @contact: 44071710@qq.com
+ * @file: FCNet.js
+ * @time: 2024/3/3 12:39 PM
+ * @desc: 网络相关的hook_api
+ */
 
 
-
-const fridaNet = require('./android/net/fridaNet');
+var fridaNet = require('./android/net/fridaNet');
 import {DMLog} from "./dmlog";
 import { FCAnd } from "./FCAnd";
 
@@ -12,7 +18,7 @@ export namespace FCNet {
     */
     export function get_url(bShowStacks: boolean = false) {
         // java.net.URL;
-        const URL = Java.use('java.net.URL');
+        var URL = Java.use('java.net.URL');
         URL.$init.overload('java.lang.String').implementation = function (url: string) {
             DMLog.i('get_url', 'url: ' + url);
             if (bShowStacks) {
@@ -29,7 +35,7 @@ export namespace FCNet {
     export function get_uri(bShowStacks: boolean = false) {
         // android.net.Uri
         // 打印url
-        const Uri = Java.use('android.net.Uri');
+        var Uri = Java.use('android.net.Uri');
         Uri.parse.implementation = function (str: string) {
             DMLog.i('get_uri', 'str: ' + str);
             if (bShowStacks) {
@@ -45,10 +51,10 @@ export namespace FCNet {
 
     export function get_requestProperty(bShowStacks: boolean = false){
         var className = null;
-        const URL = Java.use('java.net.URL');
+        var URL = Java.use('java.net.URL');
         URL.c.overload().implementation = function () {
             // DMLog.i('get_requestProperty', 'url: ' + url);
-            const result = this.get_requestProperty();
+            var result = this.get_requestProperty();
             className = result.$className
             if (bShowStacks) {
                 FCAnd.showStacks();
@@ -58,9 +64,9 @@ export namespace FCNet {
         }
 
         if(className != null){
-            const HttpURLConnectionImol = Java.use(className);
+            var HttpURLConnectionImol = Java.use(className);
             HttpURLConnectionImol.setRequestProperty.implementation = function(key:any,value:any){
-                const result = this.setRequestProperty(key,value)
+                var result = this.setRequestProperty(key,value)
                 DMLog.i('get_requestProperty', 'setRequestProperty key:' + key + ' value:' + value);
                 return result;
             }
@@ -89,7 +95,7 @@ export namespace FCNet {
         SocketOutputStream.write.overload('[B','int','int').implementation = function(b:any,off:any,len:any){
             DMLog.i('get_socket', 'socket_write b: ' + b + ' off: ' + off + ' len: ' + len);
             DMLog.i('get_socket','hex array value: ' + fridaNet.jhexdump(b));
-            const result = this.write(b,off,len);
+            var result = this.write(b,off,len);
             DMLog.i('get_socket','return value: ' + result);
             return result
         }
@@ -111,7 +117,7 @@ export namespace FCNet {
         SocketInputStream.read.overload('[B','int','int').implementation = function(b:any,off:any,len:any){
             DMLog.i('get_socket_read', 'socket_write b: ' + b + ' off: ' + off + ' len: ' + len);
             DMLog.i('get_socket_read','hex array value: ' + fridaNet.jhexdump(b));
-            const result = this.read(b,off,len);
+            var result = this.read(b,off,len);
             DMLog.i('get_socket_read','return value: ' + result);
             return result
         }
@@ -122,7 +128,7 @@ export namespace FCNet {
         获取ip地址和端口
     */
     export function get_ip_and_port(bShowStacks: boolean=false){
-        const InetSocketAddress = Java.use('java.net.InetSocketAddress');
+        var InetSocketAddress = Java.use('java.net.InetSocketAddress');
         // 构造方法
         InetSocketAddress.$init.overload('java.net.InetAddress','int').implementation = function(addr,port){
             // 区分本地地址还是远程地址
@@ -135,7 +141,7 @@ export namespace FCNet {
                 FCAnd.showStacks();
             }
 
-            const result = this.$init(addr,port);
+            var result = this.$init(addr,port);
             return result;
         }
     }
@@ -144,9 +150,9 @@ export namespace FCNet {
         okhttp的newCall
     */
     export function get_okhhtp3_newcall(){
-        const OkHttpClient = Java.use('okhttp3.OkHttpClient')
+        var OkHttpClient = Java.use('okhttp3.OkHttpClient')
         OkHttpClient.newCall.implementation = function(request:any){
-            const result = this.newCall(request)
+            var result = this.newCall(request)
             DMLog.i('get_okhhtp3_newcall', 'newcall args: ' + request.toString());
             return result
         }
@@ -164,18 +170,26 @@ export namespace FCNet {
         //加载目标dex
         Java.openClassFile("/data/local/tmp/okhttp3logging.dex").load();
 
-        const MyInterceptor = Java.use("com.r0ysuse.okhttp3demo.LoggingInterceptor");
+        var MyInterceptor = Java.use("com.r0ysuse.okhttp3demo.LoggingInterceptor");
 
         // 创建对象
-        const MyInterceptorObj = MyInterceptor.$new()
+        var MyInterceptorObj = MyInterceptor.$new()
         // 利用建造者模式在Inteceptor中添加自定义链
-        const Builder = Java.use("okhttp3.OkHttpClient$Builder");
+        var Builder = Java.use("okhttp3.OkHttpClient$Builder");
         DMLog.i('call_okhttp3_Inteceptor', 'Builder obj status :' + Builder);
         Builder.build.implementation = function(){
             this.networkInterceptors().add(MyInterceptorObj);
             return this.build();
         }
         DMLog.i('call_okhttp3_Inteceptor', 'hook_okhttp3 status Success...');
+    }
+
+
+    /*
+        查找是否使用了okhttp3
+    */
+    export function okhttp3_find(){
+        fridaNet.okhttp3_find();    
     }
 
 
