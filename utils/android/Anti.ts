@@ -29,11 +29,11 @@ export namespace Anti {
     }
 
     export function anti_debug() {
-        // anti_fgets();
+        anti_fgets();
         anti_exit();
         anti_fork();
         anti_kill();
-        anti_ptrace();
+        // anti_ptrace();
     }
 
     export function anti_exit() {
@@ -51,6 +51,7 @@ export namespace Anti {
         }, 'int', ['int', 'int']));
     }
 
+    
     export function anti_kill() {
         var kill_ptr = Module.findExportByName(null, 'kill');
         if (null == kill_ptr) {
@@ -74,60 +75,60 @@ export namespace Anti {
      * State->(package) S
      * wchan->SyS_epoll_wait
      */
-    // export function anti_fgets() {
-    //     var tag = 'anti_fgets';
-    //     var fgetsPtr = Module.findExportByName(null, 'fgets');
-    //     DMLog.i(tag, 'fgets addr: ' + fgetsPtr);
-    //     if (null == fgetsPtr) {
-    //         return;
-    //     }
-    //     var fgets = new NativeFunction(fgetsPtr, 'pointer', ['pointer', 'int', 'pointer']);
-    //     Interceptor.replace(fgetsPtr, new NativeCallback(function (buffer, size, fp) {
-    //         if (null == this) {
-    //             return 0;
-    //         }
-    //         var logTag = null;
-    //         // 进入时先记录现场
-    //         var lr = FCCommon.getLR(this.context);
-    //         // 读取原 buffer
-    //         var retval = fgets(buffer, size, fp);
-    //         var bufstr = (buffer as NativePointer).readCString();
+    export function anti_fgets() {
+        var tag = 'anti_fgets';
+        var fgetsPtr = Module.findExportByName(null, 'fgets');
+        DMLog.i(tag, 'fgets addr: ' + fgetsPtr);
+        if (null == fgetsPtr) {
+            return;
+        }
+        var fgets = new NativeFunction(fgetsPtr, 'pointer', ['pointer', 'int', 'pointer']);
+        Interceptor.replace(fgetsPtr, new NativeCallback(function (buffer, size, fp) {
+            if (null == this) {
+                return 0;
+            }
+            var logTag = null;
+            // 进入时先记录现场
+            var lr = FCCommon.getLR(this.context);
+            // 读取原 buffer
+            var retval = fgets(buffer, size, fp);
+            var bufstr = (buffer as NativePointer).readCString();
 
-    //         if (null != bufstr) {
-    //             if (bufstr.indexOf("TracerPid:") > -1) {
-    //                 buffer.writeUtf8String("TracerPid:\t0");
-    //                 logTag = 'TracerPid';
-    //             }
-    //             //State:	S (sleeping)
-    //             else if (bufstr.indexOf("State:\tt (tracing stop)") > -1) {
-    //                 buffer.writeUtf8String("State:\tS (sleeping)");
-    //                 logTag = 'State';
-    //             }
-    //             // ptrace_stop
-    //             else if (bufstr.indexOf("ptrace_stop") > -1) {
-    //                 buffer.writeUtf8String("sys_epoll_wait");
-    //                 logTag = 'ptrace_stop';
-    //             }
+            if (null != bufstr) {
+                if (bufstr.indexOf("TracerPid:") > -1) {
+                    buffer.writeUtf8String("TracerPid:\t0");
+                    logTag = 'TracerPid';
+                }
+                //State:	S (sleeping)
+                else if (bufstr.indexOf("State:\tt (tracing stop)") > -1) {
+                    buffer.writeUtf8String("State:\tS (sleeping)");
+                    logTag = 'State';
+                }
+                // ptrace_stop
+                else if (bufstr.indexOf("ptrace_stop") > -1) {
+                    buffer.writeUtf8String("sys_epoll_wait");
+                    logTag = 'ptrace_stop';
+                }
 
-    //             //(sankuai.meituan) t
-    //             else if (bufstr.indexOf(") t") > -1) {
-    //                 buffer.writeUtf8String(bufstr.replace(") t", ") S"));
-    //                 logTag = 'stat_t';
-    //             }
+                //(sankuai.meituan) t
+                else if (bufstr.indexOf(") t") > -1) {
+                    buffer.writeUtf8String(bufstr.replace(") t", ") S"));
+                    logTag = 'stat_t';
+                }
 
-    //             // SigBlk
-    //             else if (bufstr.indexOf('SigBlk:') > -1) {
-    //                 buffer.writeUtf8String('SigBlk:\t0000000000001204');
-    //                 logTag = 'SigBlk';
-    //             }
-    //             if (logTag) {
-    //                 DMLog.i(tag + " " + logTag, bufstr + " -> " + buffer.readCString() + ' lr: ' + lr
-    //                     + "(" + FCCommon.getModuleByAddr(lr) + ")");
-    //             }
-    //         }
-    //         return retval;
-    //     }, 'pointer', ['pointer', 'int', 'pointer']));
-    // }
+                // SigBlk
+                else if (bufstr.indexOf('SigBlk:') > -1) {
+                    buffer.writeUtf8String('SigBlk:\t0000000000001204');
+                    logTag = 'SigBlk';
+                }
+                if (logTag) {
+                    DMLog.i(tag + " " + logTag, bufstr + " -> " + buffer.readCString() + ' lr: ' + lr
+                        + "(" + FCCommon.getModuleByAddr(lr) + ")");
+                }
+            }
+            return retval;
+        }, 'pointer', ['pointer', 'int', 'pointer']));
+    }
 
     export function anti_ptrace() {
         var ptrace = Module.findExportByName(null, "ptrace");

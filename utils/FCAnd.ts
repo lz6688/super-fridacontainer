@@ -22,15 +22,16 @@ export namespace FCAnd {
     export var common = FCCommon;
     export var call = Call_method;
 
-    /*
-        获取调用栈
+    /**
+     * 获取调用栈
     */
     export function getStacks() {
         return Java.use("android.util.Log").getStackTraceString(Java.use("java.lang.Exception").$new()) + "";
     }
 
-    /*
-        显示调用栈
+    /**
+     * 显示调用栈
+     * @description 用于显示堆栈
     */
     export function showStacks() {
         Java.perform(function () {
@@ -40,11 +41,18 @@ export namespace FCAnd {
         });Process.getCurrentThreadId()
     }
 
+    /**
+     * 获取jsonobject类中getString的值
+     * @param {string} pKey - 要查找的key
+     * @description 打印在apk运行时所有的key,只要有用到jsonobject类
+    */
+    export function get_JSONObject_getString(pKey: string) {
     /*
         获取JSONObject的key值
     */
-    export function get_JSONObject_getString(pKey: string) {
         var JSONObject = Java.use('org.json.JSONObject');
+
+        
         JSONObject.getString.implementation = function (key: string) {
             if (key == pKey) {
                 DMLog.i('get_JSONObject_getString', 'found key: ' + key);
@@ -54,9 +62,11 @@ export namespace FCAnd {
         }
     }
 
-    /*
-        获取fastjson的key值
-    */
+    /** 
+     * 获取json的key值
+     * @param {string} pKey - 要查找的key
+     * @returns 打印在apk运行时所有的key,只要有用到json格式
+    */  
     export function get_fastJson(pKey: string) {
         // coord: (106734,0,22) | addr: Lcom/alibaba/fastjson/JSONObject; | loc: ?
         var fastJson = Java.use('com/alibaba/fastjson/JSONObject');
@@ -90,8 +100,11 @@ export namespace FCAnd {
         };
     }
 
-    /*
-        获取Map的key和val值
+    /**
+     *  获取Map的key和val值
+     *  @param {string} pKey - 要查找的key
+     *  @param {boolean} accurately - 是否精确获取
+     *  @description 打印在apk运行时所有的key和value,只要有用到Map
     */
     export function get_Map(pKey: string, accurately: boolean) {
         var Map = Java.use('java.util.Map');
@@ -129,8 +142,8 @@ export namespace FCAnd {
         };
     }
 
-    /* 
-        获取android日志输出
+    /** 
+     *   获取android日志输出
     */
     export function get_log() {
         var Log = Java.use('android.util.Log');
@@ -160,8 +173,9 @@ export namespace FCAnd {
         };
     }
 
-    /*
-        获取消息框的信息
+    /**
+     *  获取消息框的信息
+     *  @param {boolean} bShowStacks - 是否打印堆栈
     */
     export function get_makeText(bShowStacks: boolean=false){
         var TextView= Java.use("android.widget.Toast");
@@ -175,8 +189,9 @@ export namespace FCAnd {
         };
     }
     
-    /*
-        获取hook的随机数
+    /**
+     * 获取hook的随机数
+     * @param {boolean} bShowStacks - 是否打印堆栈
     */
     export function get_random(bShowStacks: boolean=false){
         var Math = Java.use("java.lang.Math");
@@ -190,8 +205,9 @@ export namespace FCAnd {
         }
     }
 
-    /*
-        设置hook的随机数
+    /**
+     * 设置hook的随机数
+     * @param {boolean} bShowStacks - 是否打印堆栈
     */
     export function set_random(value:any){
         var Math = Java.use("java.lang.Math");
@@ -202,8 +218,9 @@ export namespace FCAnd {
         }
     }
 
-    /* 
-        获取应用程序的签名
+    /**
+     * 获取应用程序的签名
+     * @param {boolean} bShowStacks - 是否打印堆栈
     */
     export function get_signatures(bShowStacks: boolean=false){
         var Signature = Java.use("android.content.pm.Signature");
@@ -217,8 +234,9 @@ export namespace FCAnd {
         }
     }
 
-    /*
-        获取字节缓冲区的容量
+    /**
+     * 获取字节缓冲区的容量
+     * @param {boolean} bShowStacks - 是否打印堆栈
     */
     export function get_ByteBuffer_allocate(bShowStacks: boolean=false){
         var ByteBuffer = Java.use("java.nio.ByteBuffer");
@@ -232,8 +250,8 @@ export namespace FCAnd {
         }
     }
     
-    /* 
-        获取字节缓存区写入的数组(暂时hook不住) 
+    /**
+     * 获取字节缓存区写入的数组(暂时hook不住) 
     */
     export function get_HeapByteBuffer_array(){
         Java.choose("java.nio.HeapByteBuffer",{
@@ -245,8 +263,9 @@ export namespace FCAnd {
         })
     }
 
-    /*
-        获取字节缓冲区的写入
+    /**
+     * 获取字节缓冲区的写入
+     * @param {boolean} bShowStacks - 是否打印堆栈
     */
     export function get_HeapByteBuffer_put(bShowStacks: boolean=false){
         // ByteBuffer 的实现类
@@ -278,11 +297,11 @@ export namespace FCAnd {
         
     }
 
-    /*
-        获取某个类中变量的值
-        cls:类名
-        name:变量名
-        is_static:是否是静态变量名
+    /**
+     * 获取某个类中变量的值
+     * @param {string} cls - 类名
+     * @param {string} name - 变量名
+     * @param {boolean} is_static - 是否静态变量名
     */
     export function get_value(cls:string,name:string,is_static:boolean=false){
         if(is_static){
@@ -302,12 +321,12 @@ export namespace FCAnd {
         }
     }
 
-    /*
-        设置某个类中变量的值
-        cls:类名
-        name:变量名
-        value:变量的值
-        is_static:是否是静态变量名
+    /**
+     * 设置某个类中变量的值
+     * @param {string} cls - 类名
+     * @param {string} name - 变量名
+     * @param {boolean} value - 变量的值
+     * @param {boolean} is_static - 是否静态变量名 
     */
     export function set_value(cls:string,name:string,value:any,is_static:boolean=false){
         if(is_static){
@@ -331,10 +350,37 @@ export namespace FCAnd {
         }
     }
 
+    /** 
+     * 获取添加到数组的值
+    */
+    export function get_arraylist_add(){
+        var arraylist = Java.use("java.util.ArrayList");
+        arraylist.add.overload("java.lang.Object").implementation = function(a:any){
+            DMLog.i("get_arraylist_add","arraylist_add value:  " + a);
+            return this.add(a);
+        }
 
-    /*
-        根据找到的类查找动态加载的dex
-        cls:类名
+        arraylist.add.overload("int","java.lang.Object").implementation = function(a:any,b:any){
+            DMLog.i("get_arraylist_add","arraylist_add value:  " + a + " " + b);
+            return this.add(a,b);
+        }
+    }
+
+    /**
+     * 判断输入是否相等
+     * @description 在apk运行中如果有判断是否相等,可以hook住并打印出来
+    */
+    export function get_textutils_isEmpty(){
+        var textutils = Java.use("android.text.TextUtils");
+        textutils.isEmpty.implementation = function(a:any){
+            DMLog.i("get_textutils_isEmpty","textutils_isEmpty value:  " + a);
+            return this.isEmpty(a);
+        } 
+    }
+    
+    /**
+     * 根据找到的类查找动态加载的dex
+     * @param {string} cls - 类名
     */
     export function check_dyn_dex(cls:string){
         //hook 动态加载的dex
@@ -359,17 +405,17 @@ export namespace FCAnd {
         });
     }
 
-    /*
-        根据传进去的方法查找实现类
-        cls:类名
-        m:要查找的方法名
-
+    /**
+    * 根据传入的方法查找对应的实现类
+    * @param {string} cls - 类名
+    * @param {string} method - 要查找的方法名
+    * @description 这个方法常应用在查找接口类和抽象类中,方法的实现
     */
-    export function find_method(cls:string,m:string){
+    export function find_method(cls:string,method:string){
         var Class = Java.use(cls);
         Java.choose(cls, {
             onMatch: function (instance) {
-                DMLog.i("find_method","claessName : " + instance[m].$className);
+                DMLog.i("find_method","claessName : " + instance[method].$className);
             }, onComplete: function () {
 
             }
@@ -377,22 +423,25 @@ export namespace FCAnd {
     }
 
 
-    /*
-        旧版内存拉取
+    /**
+     * 旧版内存拉取(不推荐)
+     * @description 从内存中拉取dex文件
     */
-    export function dump_dex_common() {
+    export function dump_dex_common_old() {
         fridaUnpack.unpack_common();
     }
 
-    /*
-        新版内存拉取(推荐)
+    /**
+     * 新版内存拉取(推荐)
+     * @description 从内存中拉取dex文件
     */
     export function dump_dex() {
         fridaUnpack.dump_dex();
     }
 
-    /*
-        加载so文件时机
+    /**
+     * 加载so文件时机
+     * @description 可以查看apk启动时加载的so文件,如果检测不在java层,可以快速定位检测调试的so文件
     */
     export function traceLoadlibrary() {
         // 低版本
@@ -424,21 +473,9 @@ export namespace FCAnd {
         }
     }
 
-    /*
-        显示模块
-    */
-    export function showModules() {
-        var modules = Process.enumerateModules();
-        modules.forEach(function (value, index, array) {
-            /*
-                以json对象形式
-            */
-            DMLog.i('showModules', JSON.stringify(value));
-        })
-    }
-
-    /*
-        跟踪fopen
+    /**
+     * 跟踪fopen
+     * @description 通常用于查看apk在加载时都打开了哪些文件
     */
     export function traceFopen() {
         var open_ptr = Module.findExportByName(null, 'fopen');
@@ -457,8 +494,8 @@ export namespace FCAnd {
 
     /**
      * 写内存
-     * @param {NativePointer} addr
-     * @param {string} str
+     * @param {NativePointer} addr - 内存地址
+     * @param {string} str - 要写入的内容
      */
     export function writeMemory(addr: NativePointer, str: string) {
         Memory.protect(addr, str.length, 'rwx');
@@ -478,8 +515,8 @@ export namespace FCAnd {
         return String.$new(res);
     }
 
-    /*
-        获取上下文信息(常用)
+    /**
+     * 获取上下文信息(常用)
     */
     export function getApplicationContext() {
         var ActivityThread = Java.use('android.app.ActivityThread');
@@ -488,8 +525,8 @@ export namespace FCAnd {
         return ctx;
     }
 
-    /*
-        打印字节数组
+    /**
+     * 打印字节数组
     */ 
     export function printByteArray(jbytes: any) {
         // return JSON.stringify(jbytes);

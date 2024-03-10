@@ -1,6 +1,6 @@
 
-/*
-    设置比较的两个字符串值
+/**
+ * 修改比较的两个字符串值
 */
 function set_strstr(str1=undefined,str2=undefined,ret=undefined){
     var addr_close = Module.findExportByName(null,"strstr");
@@ -25,6 +25,7 @@ function set_strstr(str1=undefined,str2=undefined,ret=undefined){
         onLeave:function(retval){
             // console.log("strstr return ",retval)
             if (ret != undefined){
+                // 修改返回值
                 retval.replace(ret);
             }
         }

@@ -18,7 +18,7 @@ $ cd super-fridacontainer/
 $ npm install
 ## after edit index.ts
 $ npm run build
-$ frida -U -f com.example.android --no-pause -l _fcagent.js
+$ frida -U -f com.example.android --no-pause -l _fcagent.js -o outlog.log
 ```
 
 - 开发实时编译

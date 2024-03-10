@@ -13,6 +13,8 @@ import {FCNet} from "./utils/FCNet";
 
 function main() {   
     DMLog.d('MAIN', 'HELLO FridaContainer, please add code on the index.ts');
+    FCAnd.anti.anti_debug();
+    // com.mr.hy.xhy
     // FCAnd.get_random();
     // FCAnd.set_random(0.005);
     // FCAnd.get_signatures();
@@ -23,7 +25,8 @@ function main() {
     // FCNet.get_url_all();
     // FCNet.get_socket_all();
     // FCNet.get_ip_and_port();
-    FCNet.okhttp3_find();
+    // FCNet.okhttp3_find();
+    // FCNet.get_webview_loadurl();
     
 }
 

@@ -13,8 +13,9 @@ import { FCAnd } from "./FCAnd";
 
 
 export namespace FCNet {
-    /*
-        获取url_1
+    /**
+    * 获取url_1
+    * @description 获取apk打开一个url的方式之一
     */
     export function get_url(bShowStacks: boolean = false) {
         // java.net.URL;
@@ -28,9 +29,9 @@ export namespace FCNet {
         }
     }
 
-
-    /*
-        获取url_2
+    /**
+    * 获取uri
+    * @description 获取apk打开一个url的方式之一
     */
     export function get_uri(bShowStacks: boolean = false) {
         // android.net.Uri
@@ -45,10 +46,9 @@ export namespace FCNet {
         }
     }
 
-    /*
-        获取请求头参数
+    /**
+     *获取请求头参数
     */
-
     export function get_requestProperty(bShowStacks: boolean = false){
         var className = null;
         var URL = Java.use('java.net.URL');
@@ -81,8 +81,8 @@ export namespace FCNet {
         发送数据的内容讨论的是应用层
     */
 
-    /*
-        获取写入socket的信息
+    /**
+     * 获取写入socket的信息
     */
     export function get_socket_write(is_ssl:boolean=true){
         var SocketOutputStream = undefined;
@@ -101,9 +101,9 @@ export namespace FCNet {
         }
     }
 
-    /*
-        获取读取socket的信息
-        is_ssl:用于区分获取ssl封装的还是直接获取
+    /**
+     * 获取读取socket的信息
+     * @param {boolean} is_ssl - 是否ssl封装
     */
     export function get_socket_read(is_ssl:boolean=true){
         var SocketInputStream = undefined;
@@ -124,8 +124,9 @@ export namespace FCNet {
     }
 
 
-    /*
-        获取ip地址和端口
+    /**
+     * 获取ip地址和端口
+     * @description 只要有网络请求就能hook住,并打印出对应的ip和端口
     */
     export function get_ip_and_port(bShowStacks: boolean=false){
         var InetSocketAddress = Java.use('java.net.InetSocketAddress');
@@ -158,14 +159,13 @@ export namespace FCNet {
         }
     }
 
-    /*
-        调用okhttp的Inteceptor
-        Inteceptor是一个拦截器
-        利用加载dex的形式
-        需要先将okhttp3logging.dex推送到/data/local/tmp/下
-        日志输出用logcat看
+    /**
+    * 调用okhttp的Inteceptor
+    * @description Inteceptor是一个拦截器,利用加载dex的形式
+    * @description okhttp3logging.dex在utils/dex目录下
+    * @description 需要先将okhttp3logging.dex推送到/data/local/tmp/下
+    * @description 日志输出用logcat看
     */
-
     export function call_okhttp3_Inteceptor(){
         //加载目标dex
         Java.openClassFile("/data/local/tmp/okhttp3logging.dex").load();
@@ -185,16 +185,26 @@ export namespace FCNet {
     }
 
 
-    /*
-        查找是否使用了okhttp3
+    /**
+    * 查找是否使用okhttp3库
     */
     export function okhttp3_find(){
         fridaNet.okhttp3_find();    
     }
+ 
+    /**
+    * 获取webview加载的url
+    */
+    export function get_webview_loadurl(){
+        var WebView = Java.use("android.webkit.WebView");
+        WebView.loadUrl.overload("java.lang.String").implementation = function (url:String) {
+            DMLog.i("get_webview_loadurl","loadurl:" + url);
+            this.loadUrl(url);
+        }
+    }
 
-
-    /*
-        获取本模块socket所有信息
+    /**
+     * 获取socket所有信息
     */
     export function get_socket_all(){
         get_socket_write()
@@ -202,13 +212,12 @@ export namespace FCNet {
         get_ip_and_port()
     }
 
-    /*
-        获取本模块url所有信息
+    /**
+    * 获取本模块url所有信息
     */
     export function get_url_all(){
         get_url();
         get_uri();
     }
-
 
 }

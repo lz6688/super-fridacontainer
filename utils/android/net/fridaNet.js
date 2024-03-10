@@ -1,4 +1,6 @@
-// byte数组可视化
+/** 
+ * byte数组可视化
+*/
 function jhexdump(array){
     // 开辟内存空间
     var ptr = Memory.alloc(array.length)
@@ -10,9 +12,9 @@ function jhexdump(array){
 }
 
 
-/*
-     * check className & filter
-    */
+/**
+ * check className & filter
+*/
 function checkClass(name) {
     // 是否以com.开头
     if (name.startsWith("com.")
@@ -34,8 +36,8 @@ function checkClass(name) {
     return true;
 }
 
-/*
-     查找是否使用了okhttp3
+/**
+ * 查找是否使用了okhttp3
 */
 function okhttp3_find(){
     // 加载dex
